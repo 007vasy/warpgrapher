@@ -104,8 +104,11 @@ jobs:
       - name: Run Tests (All Features)
         run: cargo test --all-features -- --test-threads=1
 
+      - name: Stop gremlin database
+        run: docker rm -f gremlin
+
       - name: Stop neo4j database
         run: docker rm -f neo4j
 
       - name: Stop gremlin database
-        run: docker rm -f gremlin
+        run: docker rm -f anzograph
