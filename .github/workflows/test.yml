@@ -77,7 +77,7 @@ jobs:
       - name: Check Neo4J Build
         run: cargo check --features neo4j
 
-      - name: Check Anzo Build
+      - name: Check SparQL Build
         run: cargo check --features sparql
 
       - name: Check Examples
@@ -97,6 +97,9 @@ jobs:
 
       - name: Start neo4j database
         run: docker run --rm -d --name neo4j -e NEO4J_AUTH="neo4j/testpass" -p 7474:7474 -p 7687:7687 neo4j:4.1
+
+      - name: Start anzograph (SparQL) database
+        run: docker run -d -p 80:8080 -p 443:8443 --name=anzograph cambridgesemantics/anzograph:latest
 
       - name: Run Tests (All Features)
         run: cargo test --all-features -- --test-threads=1
