@@ -38,7 +38,7 @@ bb8-bolt = { version = "0.4.0", optional = true }
 bolt-client = { version = "0.7.0", optional = true }
 bolt-proto = { version = "0.8.0", optional = true }
 gremlin-client = { version = "0.6.1", optional = true, features = ["derive"] }
-sophia = "0.6.2"
+sophia = {version = "0.6.2", optional = true}
 
 [dev-dependencies]
 assert_approx_eq = "1.1.0"

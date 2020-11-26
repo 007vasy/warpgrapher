@@ -3,14 +3,14 @@ name: Test
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags-ignore:
-      - '**'
+      - "**"
     paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'examples/**'
-      - '.github/**'
+      - "src/**"
+      - "tests/**"
+      - "examples/**"
+      - ".github/**"
 
 jobs:
   test:
@@ -31,73 +31,75 @@ jobs:
       WG_NEO4J_PORT: 7687
       WG_NEO4J_USER: neo4j
       WG_NEO4J_PASS: testpass
+      WG_ANZO_USER: admin
+      WG_ANZO_PASS: Passw0rd1
       RUST_BACKTRACE: full
-      
+
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Cargo version
-      run: cargo version
-      
-    - name: Cache cargo registry
-      uses: actions/cache@v1
-      with:
-        path: ~/.cargo/registry
-        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cargo version
+        run: cargo version
 
-    - name: Cache cargo index
-      uses: actions/cache@v1
-      with:
-        path: ~/.cargo/git
-        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
 
-    - name: Cache cargo build
-      uses: actions/cache@v1
-      with:
-        path: target
-        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-    
-    - name: Cache cargo audit
-      uses: actions/cache@v1
-      with:
-        path: rustbins
-        key: cargo-audit
- 
-    - name: Check Featureless Build
-      run: cargo check
-      
-    - name: Check Cosmos Build
-      run: cargo check --features cosmos
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
 
-    - name: Check Gremlin Build
-      run: cargo check --features gremlin
+      - name: Cache cargo build
+        uses: actions/cache@v1
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
-    - name: Check Neo4J Build
-      run: cargo check --features neo4j
+      - name: Cache cargo audit
+        uses: actions/cache@v1
+        with:
+          path: rustbins
+          key: cargo-audit
 
-    - name: Check Examples
-      run: cargo check --examples --features neo4j
+      - name: Check Featureless Build
+        run: cargo check
 
-    - name: Install Clippy
-      run: rustup component add clippy
+      - name: Check Cosmos Build
+        run: cargo check --features cosmos
 
-    - name: Run Linter
-      run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: Check Gremlin Build
+        run: cargo check --features gremlin
 
-    - name: Build gremlin docker
-      run: docker build -t gremlin -f tests/fixtures/gremlin/Dockerfile tests/fixtures/gremlin
+      - name: Check Neo4J Build
+        run: cargo check --features neo4j
 
-    - name: Start gremlin database
-      run: docker run --rm -d --name gremlin -p 8182:8182 gremlin:latest
-      
-    - name: Start neo4j database
-      run: docker run --rm -d --name neo4j -e NEO4J_AUTH="neo4j/testpass" -p 7474:7474 -p 7687:7687 neo4j:4.1
+      - name: Check Examples
+        run: cargo check --examples --features neo4j
 
-    - name: Run Tests (All Features)
-      run: cargo test --all-features -- --test-threads=1
+      - name: Install Clippy
+        run: rustup component add clippy
 
-    - name: Stop neo4j database
-      run: docker rm -f neo4j
+      - name: Run Linter
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
-    - name: Stop gremlin database
-      run: docker rm -f gremlin
+      - name: Build gremlin docker
+        run: docker build -t gremlin -f tests/fixtures/gremlin/Dockerfile tests/fixtures/gremlin
+
+      - name: Start gremlin database
+        run: docker run --rm -d --name gremlin -p 8182:8182 gremlin:latest
+
+      - name: Start neo4j database
+        run: docker run --rm -d --name neo4j -e NEO4J_AUTH="neo4j/testpass" -p 7474:7474 -p 7687:7687 neo4j:4.1
+
+      - name: Run Tests (All Features)
+        run: cargo test --all-features -- --test-threads=1
+
+      - name: Stop neo4j database
+        run: docker rm -f neo4j
+
+      - name: Stop gremlin database
+        run: docker rm -f gremlin
