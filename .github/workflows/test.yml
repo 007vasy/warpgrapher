@@ -77,6 +77,9 @@ jobs:
       - name: Check Neo4J Build
         run: cargo check --features neo4j
 
+      - name: Check Anzo Build
+        run: cargo check --features sparql
+
       - name: Check Examples
         run: cargo check --examples --features neo4j
 
