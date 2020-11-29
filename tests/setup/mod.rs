@@ -354,6 +354,9 @@ pub(crate) async fn clear_db() {
 
     #[cfg(feature = "neo4j")]
     clear_neo4j_db().await;
+
+    #[cfg(feature = "sparql")]
+    clear_sparql_db();
 }
 
 #[derive(Clone, Debug)]
@@ -584,4 +587,10 @@ pub(crate) fn project_top_issues(facade: ResolverFacade<AppRequestCtx>) -> Execu
     } else {
         panic!("Unsupported database.");
     }
+}
+
+#[cfg(feature = "sparql")]
+#[allow(dead_code)]
+fn clear_sparql_db() {
+    ()
 }
